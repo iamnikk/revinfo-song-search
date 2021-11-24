@@ -27,7 +27,7 @@ const Artist = () => {
 
   useEffect(() => {
     getArtistDetail()
-  }, [])
+  })
 
   return (
     <>
@@ -40,7 +40,7 @@ const Artist = () => {
           <Col span={16} offset={4}>
             <Row gutter={[16, 16]} className=''>
               {artistSongs.map((artistSong) => (
-                <Common data={artistSong} />
+                <Common data={artistSong} key={artistSong.id} />
               ))}
             </Row>
           </Col>

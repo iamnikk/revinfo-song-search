@@ -8,7 +8,7 @@ const Common = ({ data }) => {
 
   return (
     <>
-      <Col lg={6} md={6} sm={12} xs={12}>
+      <Col lg={6} md={6} sm={12} xs={12} key={data.id}>
         <div className='song-name-div'>
           <p>
             <b>Song Title:</b> {data.title}

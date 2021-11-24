@@ -1,40 +1,51 @@
-import React, { useEffect, useState } from 'react'
+import { LoadingOutlined } from '@ant-design/icons'
+import { Col, Row, Select, Spin } from 'antd'
 import axios from 'axios'
-import { Input, Row, Col, Spin } from 'antd'
-import { SearchOutlined, LoadingOutlined } from '@ant-design/icons'
-import { BASE_URL } from '../utils/API'
+import React, { useState } from 'react'
 import Common from '../Components/Common'
+import { BASE_URL } from '../utils/API'
 
 const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />
+const { Option } = Select
 
 const Home = () => {
   const [songs, setSongs] = useState([])
+  const [searchData, setSearchData] = useState([])
   const [searchText, setSearchText] = useState('')
-  const [isFound, setIsFound] = useState(true)
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(false)
 
-  const updateSearchText = (e) => {
-    setSearchText(e.target.value)
-  }
-
-  const searchSongs = async () => {
+  const onChange = async (e) => {
+    let checkData = e === undefined ? '' : e
     try {
       const response = await axios.get(
-        `${BASE_URL}a/ra/songs.json?pattern=${searchText}`
+        `${BASE_URL}a/ra/songs.json?pattern=${checkData}`
       )
-      setSongs(response.data)
+      setSearchData(response.data)
       setIsLoading(false)
-      if (response.data.length > 0) {
-        setIsFound(false)
-      }
     } catch (error) {
       setIsLoading(true)
     }
   }
 
-  useEffect(() => {
-    searchSongs()
-  }, [searchText])
+  function onBlur() {
+    // console.log('blur')
+  }
+
+  function onFocus() {
+    // console.log('focus')
+  }
+
+  const onSearch = async (e) => {
+    setSearchText(e)
+    try {
+      const response = await axios.get(
+        `${BASE_URL}a/ra/songs.json?pattern=${e}`
+      )
+      setSongs(response.data)
+    } catch (error) {
+      setIsLoading(true)
+    }
+  }
 
   return (
     <>
@@ -43,13 +54,28 @@ const Home = () => {
           <h1>Search your Favourite Music</h1>
         </div>
         <div className='my-nav-search'>
-          <Input
+          <Select
+            showSearch
+            style={{ width: 350 }}
+            placeholder='Search'
+            optionFilterProp='children'
+            onChange={onChange}
+            onFocus={onFocus}
+            onBlur={onBlur}
+            onSearch={onSearch}
+            showArrow={false}
+            allowClear
             size='large'
-            placeholder='search'
-            prefix={<SearchOutlined />}
-            onChange={updateSearchText}
-            style={{ width: '350px' }}
-          />
+            // filterOption={(input, option) =>
+            //   option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+            // }
+          >
+            {songs.map((song) => (
+              <Option value={song.title} key={song.id}>
+                {song.title}
+              </Option>
+            ))}
+          </Select>
         </div>
       </div>
 
@@ -59,17 +85,12 @@ const Home = () => {
         </p>
       ) : (
         <>
-          {songs.length <= 0 && searchText.length == 0 && (
-            <p style={{ textAlign: 'center' }}>We have 10,000+ Songs</p>
-          )}
-          {songs.length <= 0 && !isFound && searchText.length > 0 ? (
-            <p style={{ textAlign: 'center' }}>No result found</p>
-          ) : (
+          {searchText.length > 0 && (
             <Row className='song-name-sec'>
               <Col span={16} offset={4}>
-                <Row gutter={[16, 16]} className=''>
-                  {songs.map((song) => (
-                    <Common data={song} />
+                <Row gutter={[16, 16]}>
+                  {searchData.map((song) => (
+                    <Common data={song} key={song.id} />
                   ))}
                 </Row>
               </Col>
