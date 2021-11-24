@@ -1,0 +1,35 @@
+p {
+  margin-bottom: 0.5rem;
+}
+
+.my-nav-main {
+  background: #3256b9 !important;
+  padding: 150px 0;
+}
+
+.my-nav-head {
+  text-align: center;
+}
+
+.my-nav-head h1 {
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 56px;
+  line-height: 72px;
+}
+
+.my-nav-search {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.song-name-sec {
+  padding: 10px 0px;
+}
+
+.song-name-div {
+  border: 1px solid #c3c6cd;
+  padding: 8px;
+  min-height: 135px;
+}
